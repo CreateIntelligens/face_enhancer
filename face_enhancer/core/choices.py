@@ -2,7 +2,7 @@ import logging
 from typing import List, Sequence
 
 from face_enhancer.core.common_helper import create_float_range, create_int_range
-from face_enhancer.core.types import Angle, BenchmarkMode, BenchmarkResolution, BenchmarkSet, DownloadProvider, DownloadProviderSet, DownloadScope, ExecutionProvider, ExecutionProviderSet, FaceDetectorModel, FaceDetectorSet, FaceLandmarkerModel, FaceMaskArea, FaceMaskAreaSet, FaceMaskRegion, FaceMaskRegionSet, FaceMaskType, FaceOccluderModel, FaceParserModel, FaceSelectorMode, FaceSelectorOrder, Gender, ImageFormat, ImageTypeSet, JobStatus, LogLevel, LogLevelSet, Race, Score, TempFrameFormat, UiWorkflow
+from face_enhancer.core.types import Angle, DownloadProvider, DownloadProviderSet, DownloadScope, ExecutionProvider, ExecutionProviderSet, FaceDetectorModel, FaceDetectorSet, FaceLandmarkerModel, FaceMaskArea, FaceMaskAreaSet, FaceMaskRegion, FaceMaskRegionSet, FaceMaskType, FaceSelectorMode, FaceSelectorOrder, LogLevel, LogLevelSet, Score
 
 face_detector_set : FaceDetectorSet =\
 {
@@ -16,10 +16,6 @@ face_detector_models : List[FaceDetectorModel] = list(face_detector_set.keys())
 face_landmarker_models : List[FaceLandmarkerModel] = [ 'many', '2dfan4', 'peppa_wutz' ]
 face_selector_modes : List[FaceSelectorMode] = [ 'many', 'one', 'reference' ]
 face_selector_orders : List[FaceSelectorOrder] = [ 'left-right', 'right-left', 'top-bottom', 'bottom-top', 'small-large', 'large-small', 'best-worst', 'worst-best' ]
-face_selector_genders : List[Gender] = [ 'female', 'male' ]
-face_selector_races : List[Race] = [ 'white', 'black', 'latino', 'asian', 'indian', 'arabic' ]
-face_occluder_models : List[FaceOccluderModel] = [ 'many', 'xseg_1', 'xseg_2', 'xseg_3' ]
-face_parser_models : List[FaceParserModel] = [ 'bisenet_resnet_18', 'bisenet_resnet_34' ]
 face_mask_types : List[FaceMaskType] = [ 'box', 'occlusion', 'area', 'region' ]
 face_mask_area_set : FaceMaskAreaSet =\
 {
@@ -43,42 +39,14 @@ face_mask_region_set : FaceMaskRegionSet =\
 face_mask_areas : List[FaceMaskArea] = list(face_mask_area_set.keys())
 face_mask_regions : List[FaceMaskRegion] = list(face_mask_region_set.keys())
 
-image_type_set : ImageTypeSet =\
-{
-	'bmp': 'image/bmp',
-	'jpeg': 'image/jpeg',
-	'png': 'image/png',
-	'tiff': 'image/tiff',
-	'webp': 'image/webp'
-}
-image_formats : List[ImageFormat] = list(image_type_set.keys())
-temp_frame_formats : List[TempFrameFormat] = [ 'bmp', 'jpeg', 'png', 'tiff' ]
-
-benchmark_modes : List[BenchmarkMode] = [ 'warm', 'cold' ]
-benchmark_set : BenchmarkSet =\
-{
-	'240p': '.assets/examples/target-240p.mp4',
-	'360p': '.assets/examples/target-360p.mp4',
-	'540p': '.assets/examples/target-540p.mp4',
-	'720p': '.assets/examples/target-720p.mp4',
-	'1080p': '.assets/examples/target-1080p.mp4',
-	'1440p': '.assets/examples/target-1440p.mp4',
-	'2160p': '.assets/examples/target-2160p.mp4'
-}
-benchmark_resolutions : List[BenchmarkResolution] = list(benchmark_set.keys())
-
 execution_provider_set : ExecutionProviderSet =\
 {
 	'cuda': 'CUDAExecutionProvider',
 	'tensorrt': 'TensorrtExecutionProvider',
-	'directml': 'DmlExecutionProvider',
-	'rocm': 'ROCMExecutionProvider',
-	'migraphx': 'MIGraphXExecutionProvider',
-	'openvino': 'OpenVINOExecutionProvider',
-	'coreml': 'CoreMLExecutionProvider',
 	'cpu': 'CPUExecutionProvider'
 }
 execution_providers : List[ExecutionProvider] = list(execution_provider_set.keys())
+
 download_provider_set : DownloadProviderSet =\
 {
 	'github':
@@ -111,19 +79,11 @@ log_level_set : LogLevelSet =\
 }
 log_levels : List[LogLevel] = list(log_level_set.keys())
 
-ui_workflows : List[UiWorkflow] = [ 'instant_runner', 'job_runner', 'job_manager' ]
-job_statuses : List[JobStatus] = [ 'drafted', 'queued', 'completed', 'failed' ]
-
-benchmark_cycle_count_range : Sequence[int] = create_int_range(1, 10, 1)
 execution_thread_count_range : Sequence[int] = create_int_range(1, 32, 1)
-system_memory_limit_range : Sequence[int] = create_int_range(0, 128, 4)
 face_detector_margin_range : Sequence[int] = create_int_range(0, 100, 1)
 face_detector_angles : Sequence[Angle] = create_int_range(0, 270, 90)
 face_detector_score_range : Sequence[Score] = create_float_range(0.0, 1.0, 0.05)
 face_landmarker_score_range : Sequence[Score] = create_float_range(0.0, 1.0, 0.05)
 face_mask_blur_range : Sequence[float] = create_float_range(0.0, 1.0, 0.05)
 face_mask_padding_range : Sequence[int] = create_int_range(0, 100, 1)
-face_selector_age_range : Sequence[int] = create_int_range(0, 100, 1)
 reference_face_distance_range : Sequence[float] = create_float_range(0.0, 1.0, 0.05)
-output_image_quality_range : Sequence[int] = create_int_range(0, 100, 1)
-output_image_scale_range : Sequence[float] = create_float_range(0.25, 8.0, 0.25)

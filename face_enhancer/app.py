@@ -45,7 +45,7 @@ from face_enhancer.core.types import Mask, VisionFrame
 class EnhanceRequest(BaseModel):
 	target_image: str = Field(..., description = 'Base64-encoded target image (JPEG/PNG).')
 	reference_image: Optional[str] = Field(None, description = 'Optional base64 reference image. Defaults to target.')
-	face_enhancer_model: str = Field('gfpgan_1.4', description = 'Model name as defined in FaceFusion face_enhancer.')
+	face_enhancer_model: str = Field('gfpgan_1.4', description = 'Face enhancer model name.')
 	face_enhancer_blend: int = Field(80, ge = 0, le = 100, description = 'Blend percentage (higher = more enhanced face).')
 	face_enhancer_weight: float = Field(0.5, ge = 0.0, le = 1.0, description = 'Model weight (if supported by the model).')
 	face_selector_mode: Optional[str] = Field(None, description = 'Face selector mode: many | one | reference.')
@@ -68,7 +68,7 @@ if STATIC_DIR.exists():
 
 def _init_defaults() -> None:
 	"""
-	Set minimal state defaults so FaceFusion internals work without touching the main repo.
+	初始化 state manager 的預設值。
 	"""
 	global _state_initialized
 	if _state_initialized:

@@ -8,7 +8,7 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
     volumes:
       - .:/app
-      - face_enhancer_models:/root/.cache/facefusion
+      - face_enhancer_models:/root/.cache/face_enhancer
 
     deploy:
       resources:

@@ -72,7 +72,7 @@ def create_static_model_set(download_scope : DownloadScope) -> ModelSet:
 		{
 			'__metadata__':
 			{
-				'vendor': 'FaceFusion',
+				'vendor': 'face_enhancer',
 				'license': 'OpenRAIL-M',
 				'year': 2024
 			},

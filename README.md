@@ -1,47 +1,38 @@
 # Face Enhancer Service
 
-Minimal FastAPI microservice that wraps the FaceFusion `face_enhancer` processor and its face selector logic. A trimmed FaceFusion source tree is bundled in this repo; models download on first use into `.assets`. You can still override with `FACEFUSION_PATH` if you want to point at another checkout.
+FastAPI 微服務，提供臉部增強 (Face Enhancement) 功能。模型會在首次使用時自動下載至 `.assets` 目錄。
 
 ## Quick start
 
-1. Install dependencies in a virtualenv:
+1. 安裝依賴：
    ```bash
    cd face_enhancer
    pip install -r requirements.txt
    pip install -e .
    ```
-2. Run the API:
+2. 啟動 API：
    ```bash
    uvicorn face_enhancer.app:app --reload --port 8005
    ```
-   Open `http://localhost:8005/` for the demo UI.
-3. Call the service:
+   開啟 `http://localhost:8005/` 使用 Demo UI。
+
+3. 呼叫服務：
    ```bash
    curl -X POST http://localhost:8005/enhance \
      -H "Content-Type: application/json" \
-     -d @payload.json  # see /docs for schema
+     -d @payload.json  # 參考 /docs 取得 schema
    ```
 
 ## Docker
 
-Build and run from the parent directory that contains the `face_enhancer` folder:
-
 ```bash
-docker build -f face_enhancer/Dockerfile -t face-enhancer-service .
-docker run --rm -p 8005:8005 face-enhancer-service
+docker compose up --build
 ```
 
-### docker-compose
+服務會在 `http://localhost:8005` 啟動，模型會持久化儲存。
 
-From the same parent directory (contains `face_enhancer`):
+## 預設值
 
-```bash
-docker compose -f face_enhancer/docker-compose.yml up --build
-```
-
-This maps port `8005:8005` and mounts `./.assets` and `./.caches` so model downloads persist across runs.
-
-## Notes
-
-- Defaults mirror FaceFusion CLI/UI (CPU execution, `gfpgan_1.4`, selector `reference` mode).
-- Models download on demand into `.assets`/`.caches` within this project.
+- 執行裝置：GPU (CUDA)，若無則自動退回 CPU
+- 模型：`gfpgan_1.4`
+- Face Selector Mode：`reference`
