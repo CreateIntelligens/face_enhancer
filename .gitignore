@@ -1,0 +1,41 @@
+# BY CSL
+.claude/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+.env
+.conda/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Caches and coverage
+.cache/
+.caches/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Editor / OS noise
+.DS_Store
+.idea/
+.vscode/
+
+# Project assets (models, downloads, temp)
+.assets/
+.logs/
+*.log

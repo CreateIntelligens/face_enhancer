@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Face Enhancer Demo</title>
+	<style>
+		:root {
+			--bg: #070b15;
+			--panel: #0f1726;
+			--card: #131c2e;
+			--muted: #9fb2d4;
+			--text: #eef3ff;
+			--accent: #63f5c6;
+			--accent-2: #6da6ff;
+			--border: #1c2740;
+		}
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			padding: 0;
+			min-height: 100vh;
+			font-family: "Space Grotesk", "Inter", system-ui, -apple-system, sans-serif;
+			background: radial-gradient(120% 120% at 10% 20%, rgba(99,245,198,0.08), transparent), radial-gradient(100% 120% at 90% 0%, rgba(109,166,255,0.12), transparent), var(--bg);
+			color: var(--text);
+		}
+		.container {
+			max-width: 1100px;
+			margin: 28px auto 48px;
+			padding: 0 20px;
+		}
+		.hero {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			gap: 16px;
+			margin-bottom: 18px;
+		}
+		.title {
+			margin: 0;
+			font-size: 28px;
+			letter-spacing: 0.4px;
+		}
+		.tagline {
+			color: var(--muted);
+			margin-top: 6px;
+			max-width: 640px;
+			line-height: 1.5;
+		}
+		.badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			background: linear-gradient(120deg, rgba(99,245,198,0.18), rgba(109,166,255,0.18));
+			border: 1px solid var(--border);
+			padding: 10px 14px;
+			border-radius: 12px;
+			font-size: 13px;
+			color: var(--text);
+			white-space: nowrap;
+		}
+		.panel {
+			background: linear-gradient(145deg, rgba(255,255,255,0.015), rgba(255,255,255,0.02)), var(--panel);
+			border: 1px solid var(--border);
+			border-radius: 16px;
+			padding: 18px 18px 20px;
+			box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+		}
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+			gap: 16px;
+		}
+		.card {
+			background: var(--card);
+			border: 1px solid var(--border);
+			border-radius: 14px;
+			padding: 14px;
+		}
+		label {
+			display: block;
+			margin-bottom: 8px;
+			font-weight: 600;
+			color: var(--muted);
+			letter-spacing: 0.2px;
+		}
+		input, select {
+			width: 100%;
+			padding: 11px 12px;
+			border-radius: 10px;
+			border: 1px solid var(--border);
+			background: #0d1424;
+			color: var(--text);
+			font-size: 15px;
+		}
+		input[type="range"] {
+			padding: 0;
+			accent-color: var(--accent);
+		}
+		helper-text, .small {
+			display: block;
+			margin-top: 6px;
+			font-size: 12px;
+			color: #7e8cac;
+		}
+		.controls {
+			margin-top: 10px;
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			gap: 14px;
+		}
+		.action-row {
+			margin-top: 18px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			align-items: center;
+		}
+		button {
+			padding: 12px 16px;
+			border: none;
+			border-radius: 12px;
+			background: linear-gradient(140deg, var(--accent), var(--accent-2));
+			color: #0a1322;
+			font-weight: 700;
+			cursor: pointer;
+			min-width: 180px;
+			box-shadow: 0 10px 30px rgba(109,166,255,0.35);
+			transition: transform 140ms ease, box-shadow 140ms ease, opacity 120ms ease;
+		}
+		button:active { transform: translateY(1px); box-shadow: 0 8px 22px rgba(109,166,255,0.28); }
+		button:disabled { opacity: 0.7; cursor: not-allowed; }
+		.status {
+			flex: 1;
+			min-height: 20px;
+			font-size: 14px;
+			color: var(--muted);
+			padding: 10px 12px;
+			border-radius: 12px;
+			background: rgba(255,255,255,0.03);
+			border: 1px dashed var(--border);
+		}
+		.result {
+			margin-top: 18px;
+			display: grid;
+			grid-template-columns: 1fr;
+		}
+		.result-card {
+			background: var(--card);
+			border: 1px solid var(--border);
+			border-radius: 14px;
+			padding: 14px;
+			text-align: center;
+			display: none;
+		}
+		.result-card.visible { display: block; }
+		.result img {
+			max-width: 100%;
+			width: 100%;
+			border-radius: 12px;
+			border: 1px solid var(--border);
+			background: #0e1627;
+			min-height: 180px;
+		}
+		.dropzone {
+			border: 1px dashed var(--border);
+			border-radius: 12px;
+			padding: 12px;
+			background: rgba(255,255,255,0.02);
+			cursor: pointer;
+			transition: border-color 120ms ease, background 120ms ease;
+		}
+		.dropzone:hover { border-color: var(--accent); background: rgba(99,245,198,0.06); }
+		.dropzone input { display: none; }
+		.preview {
+			display: none;
+			margin-top: 10px;
+			border: 1px solid var(--border);
+			border-radius: 10px;
+			overflow: hidden;
+			background: #0e1627;
+			min-height: 120px;
+			align-items: center;
+			justify-content: center;
+		}
+		.preview.visible { display: flex; }
+		.preview img { max-width: 100%; width: 100%; display: block; }
+		.filename { font-size: 12px; color: #7e8cac; margin-top: 6px; }
+		.pill {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px 10px;
+			border-radius: 999px;
+			background: rgba(99,245,198,0.12);
+			color: var(--text);
+			font-size: 12px;
+			font-weight: 600;
+			border: 1px solid rgba(99,245,198,0.3);
+		}
+		@media (max-width: 700px) {
+			.hero { flex-direction: column; }
+			button { width: 100%; }
+			.status { width: 100%; }
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="hero">
+			<div>
+				<h1 class="title">Face Enhancer</h1>
+				<p class="tagline">Upload a target portrait, optionally guide it with a reference face, and let the enhancer sharpen features while keeping natural skin textures.</p>
+			</div>
+			<span class="badge">FastAPI · ONNX Runtime</span>
+		</div>
+
+		<div class="panel">
+			<div class="grid">
+				<div class="card">
+					<label for="target">Target image (required)</label>
+					<div class="dropzone" id="targetDrop">
+						<span class="small">Click or drag a photo here</span>
+						<input id="target" type="file" accept="image/*">
+					</div>
+					<div class="filename" id="targetName">No file selected</div>
+					<div class="preview" id="targetPreviewWrapper"><img id="targetPreview" alt="Target preview"></div>
+				</div>
+				<div class="card">
+					<label for="reference">Reference image (optional)</label>
+					<div class="dropzone" id="referenceDrop">
+						<span class="small">Click or drag a photo here</span>
+						<input id="reference" type="file" accept="image/*">
+					</div>
+					<div class="filename" id="referenceName">No file selected</div>
+					<div class="preview" id="referencePreviewWrapper"><img id="referencePreview" alt="Reference preview"></div>
+					<span class="small">Leave empty to reuse the target as reference.</span>
+				</div>
+			</div>
+
+			<div class="controls">
+				<div class="card">
+					<label>Model</label>
+					<input id="model" type="hidden" value="gfpgan_1.4">
+					<div class="pill" style="margin-top:6px;">gfpgan_1.4</div>
+				</div>
+				<div class="card">
+					<label for="blend">Blend (0-100)</label>
+					<input id="blend" type="range" min="0" max="100" value="80" oninput="blendValue.textContent=this.value">
+					<span class="small">Current: <span id="blendValue">80</span></span>
+				</div>
+				<div class="card">
+					<label for="weight">Weight (0.0-1.0)</label>
+					<input id="weight" type="range" min="0" max="1" step="0.05" value="0.5" oninput="weightValue.textContent=this.value">
+					<span class="small">Current: <span id="weightValue">0.5</span></span>
+				</div>
+				<div class="card">
+					<label for="selectorMode">Face selector</label>
+					<select id="selectorMode">
+						<option value="">(default)</option>
+						<option value="reference" selected>reference</option>
+						<option value="one">one</option>
+						<option value="many">many</option>
+					</select>
+					<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:10px;">
+						<div>
+							<label for="selectorOrder">Order</label>
+							<select id="selectorOrder">
+								<option value="">(default)</option>
+								<option value="large-small" selected>large-small</option>
+								<option value="small-large">small-large</option>
+								<option value="left-right">left-right</option>
+								<option value="right-left">right-left</option>
+								<option value="top-bottom">top-bottom</option>
+								<option value="bottom-top">bottom-top</option>
+								<option value="best-worst">best-worst</option>
+								<option value="worst-best">worst-best</option>
+							</select>
+						</div>
+						<div>
+							<label for="selectorPosition">Reference position</label>
+							<input id="selectorPosition" type="number" min="0" step="1" value="0">
+						</div>
+						<div>
+							<label for="selectorDistance">Reference distance</label>
+							<input id="selectorDistance" type="range" min="0" max="1" step="0.05" value="0.3" oninput="selectorDistanceValue.textContent=this.value">
+							<span class="small">Current: <span id="selectorDistanceValue">0.3</span></span>
+						</div>
+					</div>
+					<span class="small">Leave blank to use defaults from the service.</span>
+				</div>
+			</div>
+
+			<div class="action-row">
+				<button id="run">Enhance</button>
+				<div class="status" id="status">Ready.</div>
+			</div>
+
+			<div class="result">
+				<div class="result-card" id="resultCard">
+					<div class="pill" style="margin-bottom:8px;">Enhanced preview</div>
+					<img id="resultImage" alt="Result will appear here" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const statusEl = document.getElementById('status');
+		const resultImg = document.getElementById('resultImage');
+		const resultCard = document.getElementById('resultCard');
+		const runBtn = document.getElementById('run');
+		const files = { target: null, reference: null };
+
+		function setPreview(key, file) {
+			const preview = document.getElementById(`${key}Preview`);
+			const wrapper = document.getElementById(`${key}PreviewWrapper`);
+			const nameLabel = document.getElementById(`${key}Name`);
+			if (!file) {
+				preview.src = '';
+				nameLabel.textContent = 'No file selected';
+				wrapper.classList.remove('visible');
+				return;
+			}
+			nameLabel.textContent = file.name;
+			wrapper.classList.add('visible');
+			const reader = new FileReader();
+			reader.onload = () => { preview.src = reader.result; };
+			reader.readAsDataURL(file);
+		}
+
+		function bindPicker(key) {
+			const input = document.getElementById(key);
+			const drop = document.getElementById(`${key}Drop`);
+			drop.addEventListener('click', () => input.click());
+			drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.style.borderColor = 'var(--accent)'; });
+			drop.addEventListener('dragleave', () => { drop.style.borderColor = 'var(--border)'; });
+			drop.addEventListener('drop', (e) => {
+				e.preventDefault();
+				drop.style.borderColor = 'var(--border)';
+				const file = e.dataTransfer.files?.[0];
+				if (file) {
+					files[key] = file;
+					setPreview(key, file);
+					const dt = new DataTransfer();
+					dt.items.add(file);
+					input.files = dt.files;
+				}
+			});
+			input.addEventListener('change', () => {
+				const file = input.files?.[0];
+				files[key] = file || null;
+				setPreview(key, files[key]);
+			});
+		}
+
+		bindPicker('target');
+		bindPicker('reference');
+
+		async function fileToDataUrl(input) {
+			if (files[input.id]) {
+				return new Promise((resolve, reject) => {
+					const reader = new FileReader();
+					reader.onload = () => resolve(reader.result);
+					reader.onerror = reject;
+					reader.readAsDataURL(files[input.id]);
+				});
+			}
+			if (!input.files || !input.files[0]) return null;
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onload = () => resolve(reader.result);
+				reader.onerror = reject;
+				reader.readAsDataURL(input.files[0]);
+			});
+		}
+
+		function setStatus(message) {
+			statusEl.textContent = message;
+		}
+
+		async function enhance() {
+			setStatus('Encoding images...');
+			resultImg.src = '';
+			resultCard.classList.remove('visible');
+			runBtn.disabled = true;
+			runBtn.textContent = 'Enhancing...';
+
+			const targetData = await fileToDataUrl(document.getElementById('target'));
+			if (!targetData) {
+				setStatus('Please choose a target image.');
+				runBtn.disabled = false;
+				runBtn.textContent = 'Enhance';
+				return;
+			}
+			const referenceData = await fileToDataUrl(document.getElementById('reference'));
+
+			const payload = {
+				target_image: targetData,
+				reference_image: referenceData || null,
+				face_enhancer_model: document.getElementById('model').value,
+				face_enhancer_blend: parseInt(document.getElementById('blend').value, 10),
+				face_enhancer_weight: parseFloat(document.getElementById('weight').value),
+				face_selector_mode: document.getElementById('selectorMode').value || null,
+				face_selector_order: document.getElementById('selectorOrder').value || null,
+				reference_face_position: document.getElementById('selectorPosition').value === '' ? null : parseInt(document.getElementById('selectorPosition').value, 10),
+				reference_face_distance: document.getElementById('selectorDistance').value === '' ? null : parseFloat(document.getElementById('selectorDistance').value)
+			};
+
+			setStatus('Calling API...');
+			try {
+				const res = await fetch('/enhance', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(payload)
+				});
+				if (!res.ok) {
+					const err = await res.json().catch(() => ({}));
+					throw new Error(err.detail || `Request failed (${res.status})`);
+				}
+				const data = await res.json();
+				resultImg.src = data.image_base64;
+				resultCard.classList.add('visible');
+				setStatus('Done.');
+			} catch (err) {
+				console.error(err);
+				setStatus(err.message || 'Something went wrong');
+			} finally {
+				runBtn.disabled = false;
+				runBtn.textContent = 'Enhance';
+			}
+		}
+
+		runBtn.addEventListener('click', enhance);
+	</script>
+</body>
+</html>

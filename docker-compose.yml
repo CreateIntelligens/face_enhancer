@@ -1,0 +1,25 @@
+services:
+  face-enhancer:
+    build: .
+    ports:
+      - "8005:8005"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+    volumes:
+      - .:/app
+      - face_enhancer_models:/root/.cache/facefusion
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    runtime: nvidia
+    command: /app/start.sh
+    restart: unless-stopped
+
+volumes:
+  face_enhancer_models:
