@@ -30,9 +30,3 @@ docker compose up --build
 ```
 
 服務會在 `http://localhost:8005` 啟動，模型會持久化儲存。
-
-## 預設值
-
-- 執行裝置：GPU (CUDA)，若無則自動退回 CPU
-- 模型：`gfpgan_1.4`
-- Face Selector Mode：`reference`

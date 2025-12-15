@@ -20,4 +20,4 @@ ENV PYTHONPATH=/app
 
 EXPOSE 8005
 
-CMD ["uvicorn", "face_enhancer.app:app", "--host", "0.0.0.0", "--port", "8005"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8005"]
